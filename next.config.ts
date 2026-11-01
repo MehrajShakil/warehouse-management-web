@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
+const apiBaseUrl = process.env.API_BASE_URL ?? "http://localhost:5043";
+
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {
@@ -11,6 +12,15 @@ const nextConfig: NextConfig = {
         as: "*.css",
       },
     },
+  },
+  // Proxy API calls to the ASP.NET backend so the browser stays same-origin.
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: `${apiBaseUrl}/api/:path*`,
+      },
+    ];
   },
 };
 
